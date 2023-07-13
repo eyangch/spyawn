@@ -43,3 +43,9 @@ def create(uid, chal):
         return {"status": "error", "message": "already active chal"}
     make_container(uid, chal)
     return {"status": "yay"}
+
+@app.route("/reloadconfig")
+def reloadconfig():
+    global config
+    config = json.load(open("config.json"))
+    return "😳"
