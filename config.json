@@ -6,12 +6,12 @@
 			"detach": true,
 			"healthcheck": {
 				"test": ["CMD-SHELL", "kill -9 -1"],
-				"interval": 6000000000,
+				"interval": 600000000000,
 				"timeout": 1000000000,
 				"retries": 1,
 				"start_period": 1000000000
 			},
-			"mem_limit": "32m",
+			"mem_limit": "64m",
 			"nano_cpus": 50000000,
 			"network": "shared"
 		},
