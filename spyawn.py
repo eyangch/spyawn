@@ -35,10 +35,10 @@ def del_container(uid, chal):
     print("KILLED: " + str(uid) + " " + chal)
     try:
         container = client.containers.get(chal + str(uid))
+        container.kill()
     except Exception as e:
         print(e)
         return
-    container.kill()
     with open("data/" + str(uid) + "." + chal, "w") as f:
         json.dump({"time": 0, "port": 0}, f)
 
@@ -68,6 +68,7 @@ def create(uid, chal):
     chal_dat = get(uid, chal)
     if chal_dat["time"] > round(time.time()):
         return {"status": "error", "message": "already active chal"}
+    del_container(uid, chal)
     make_container(uid, chal)
     return {"status": "yay"}
 
