@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style>
+			button {
+			  border: none;
+			  display: flex;
+			  padding: 0.75rem 1.5rem;
+			  background-color: #488aec;
+			  color: #ffffff;
+			  font-size: 0.75rem;
+			  line-height: 1rem;
+			  font-weight: 700;
+			  text-align: center;
+			  text-transform: uppercase;
+			  vertical-align: middle;
+			  align-items: center;
+			  border-radius: 0.5rem;
+			  user-select: none;
+			  gap: 0.75rem;
+			  box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17;
+			  transition: all .25s ease;
+			}
+
+			button:hover {
+			  background-color: #599bfd;
+			  box-shadow: 0 10px 15px -3px #488aec5f, 0 4px 6px -2px #488aec87;
+			}
+
+			button:disabled,button:active {
+			  opacity: .35;
+			  box-shadow: none;
+			}
+
+			p {
+				font-family: 'Courier New', monospace;
+			}
+		</style>
+	</head>
+	<body>
+		<p id="ip">Your instance is at: <br><b><a href="http://34.130.180.82:53929">http://34.130.180.82:53929</a></b><br>Time remaining: 5:28</p>
+		<button id="instance" onclick="processClick();" disabled></button>
+		<script>
+			let button = document.getElementById("instance");
+			let ip = document.getElementById("ip");
+			let hasStarted = false;
+			let hasStartedAndWaited = true;
+			let prevTime = 0;
+			let port = 0;
+			const urlParams = new URLSearchParams(window.location.search);
+			const teamId = urlParams.get("teamId");
+			const chal = urlParams.get("chal");
+
+			setInterval(function(){
+				if(!hasStartedAndWaited){
+					return;
+				}
+				let curTime = Math.round(Date.now()/1000);
+				let remainingTime = prevTime - curTime;
+				if(remainingTime < 0){
+					ip.hidden = true;
+					button.innerHTML = "Start Instance";
+					hasStarted = false;
+				}else{
+					ip.hidden = false;
+					let minutes = Math.floor(remainingTime / 60).toString();
+					let seconds = (remainingTime % 60).toString().padStart(2, "0");
+					ip.innerHTML = `Your instance is at: <br><b><a href=\"http://34.130.180.82:${port}\">http://34.130.180.82:${port}</a></b><br>Time remaining: ${minutes}:${seconds}`;
+					button.innerHTML = "Stop Instance";
+					hasStarted = true;
+				}
+			}, 250);
+
+			function getData(){
+				const req = new XMLHttpRequest();
+				req.addEventListener("load", function(){
+					let response = JSON.parse(this.responseText);
+					if("status" in response){
+						button.style.backgroundColor = "red";
+						button.innerHTML = "Error";
+						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+					}else{
+						prevTime = response["time"];
+						port = response["port"];
+						setTimeout(function(){
+							button.disabled = false;
+						}, 1100);
+					}
+				});
+				req.open("GET", "http://34.130.180.82:8000/get/" + teamId + "/" + chal);
+				req.send();
+			}
+
+			setTimeout(getData, 1000);
+			function processClick(){
+				button.disabled = true;
+				const req = new XMLHttpRequest();
+				req.addEventListener("load", function(){
+					let response = JSON.parse(this.responseText);
+					if(response["status"] === "error"){
+						button.style.backgroundColor = "red";
+						button.innerHTML = "Error";
+						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+					}else{
+						if(!hasStarted){
+							hasStartedAndWaited = false;
+							button.innerHTML = "Loading...";
+							setTimeout(function(){
+								hasStartedAndWaited = true;
+							}, 7000);
+							setTimeout(getData, 6000);
+						}else{
+							setTimeout(getData, 1100);
+						}
+					}
+				});
+				if(hasStarted){
+					req.open("GET", "http://34.130.180.82:8000/remove/" + teamId + "/" + chal);
+				}else{
+					req.open("GET", "http://34.130.180.82:8000/create/" + teamId + "/" + chal);
+				}
+				req.send();
+			}
+		</script>
+	</body>
+</html>
