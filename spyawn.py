@@ -60,18 +60,22 @@ def ratelimit(ip):
         f.write(str(round(time.time())))
     return True
 
-@app.route("/get/<int:uid>/<chal>")
-def get(uid, chal):
-    if not ratelimit(request.remote_addr):
-        return {"status": "error", "message": "rate limit exceeded"}
-    if not verify_id(uid):
-        return {"status": "error", "message": "invalid team"}
+def aux_get(uid, chal):
     res = {"time": 0, "port": 0}
     try:
         res = json.load(open("data/" + str(uid) + "." + chal))
     except:
         pass
     return res
+
+
+@app.route("/get/<int:uid>/<chal>")
+def get(uid, chal):
+    if not ratelimit(request.remote_addr):
+        return {"status": "error", "message": "rate limit exceeded"}
+    if not verify_id(uid):
+        return {"status": "error", "message": "invalid team"}
+    return aux_get(uid, chal)
 
 @app.route("/remove/<int:uid>/<chal>")
 def remove(uid, chal):
@@ -81,7 +85,7 @@ def remove(uid, chal):
         return {"status": "error", "message": "invalid team"}
     if chal not in config:
         return {"status": "error", "message": "invalid chal"}
-    chal_dat = get(uid, chal)
+    chal_dat = aux_get(uid, chal)
     if chal_dat["time"] < round(time.time()):
         return {"status": "error", "message": "chal already deleted"}
     del_container(uid, chal)
@@ -95,7 +99,7 @@ def create(uid, chal):
         return {"status": "error", "message": "invalid team"}
     if chal not in config:
         return {"status": "error", "message": "invalid chal"}
-    chal_dat = get(uid, chal)
+    chal_dat = aux_get(uid, chal)
     if chal_dat["time"] > round(time.time()):
         return {"status": "error", "message": "already active chal"}
     del_container(uid, chal)
