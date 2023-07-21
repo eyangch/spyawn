@@ -38,7 +38,7 @@
 		</style>
 	</head>
 	<body>
-		<p id="ip">Your instance is at: <br><b><a href="http://34.130.180.82:53929">http://34.130.180.82:53929</a></b><br>Time remaining: 5:28</p>
+		<p id="ip"></p>
 		<button id="instance" onclick="processClick();" disabled></button>
 		<script>
 			let button = document.getElementById("instance");
@@ -79,6 +79,7 @@
 						button.style.backgroundColor = "red";
 						button.innerHTML = "Error";
 						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+						hasStartedAndWaited = false;
 					}else{
 						prevTime = response["time"];
 						port = response["port"];
@@ -101,6 +102,7 @@
 						button.style.backgroundColor = "red";
 						button.innerHTML = "Error";
 						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+						hasStartedAndWaited = false;
 					}else{
 						if(!hasStarted){
 							hasStartedAndWaited = false;
