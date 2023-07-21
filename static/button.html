@@ -79,6 +79,7 @@
 						button.style.backgroundColor = "red";
 						button.innerHTML = "Error";
 						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+						ip.hidden = false;
 						hasStartedAndWaited = false;
 					}else{
 						prevTime = response["time"];
@@ -102,6 +103,7 @@
 						button.style.backgroundColor = "red";
 						button.innerHTML = "Error";
 						ip.innerHTML = "There has been an unexpected error. Please try again, and if this issue persists, contact an admin.";
+						ip.hidden = false;
 						hasStartedAndWaited = false;
 					}else{
 						if(!hasStarted){
