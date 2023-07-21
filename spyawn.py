@@ -18,6 +18,11 @@ app = Flask(__name__)
 
 port_range = (50000, 60000)
 
+@app.after_request
+def after_request(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
 def make_container(uid, chal):
     container = None
     port = None
