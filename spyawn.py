@@ -32,6 +32,7 @@ def make_container(uid, chal):
             container = client.containers.run(chal, ports={str(config[chal]["internal_port"]) + "/tcp": port}, name=chal+str(uid), **(config[chal]["container"]))
             break
         except Exception as e:
+            time.sleep(0.5)
             print(e)
     print("CREATED: " + str(uid) + " " + chal)
     with open("data/" + str(uid) + "." + chal, "w") as f:

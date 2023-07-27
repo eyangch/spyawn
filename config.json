@@ -34,5 +34,42 @@
 			"network": "shared"
 		},
 		"internal_port": 3000
+	},
+	"ping-pong": {
+		"container":{
+			"auto_remove": true,
+			"privileged": true,
+			"cap_drop": ["ALL"],
+			"detach": true,
+			"healthcheck": {
+				"test": ["CMD-SHELL", "kill -9 -1"],
+				"interval": 600000000000,
+				"timeout": 1000000000,
+				"retries": 1,
+				"start_period": 1000000000
+			},
+			"mem_limit": "64m",
+			"nano_cpus": 50000000,
+			"network": "ping-pong-network"
+		},
+		"internal_port": 5000
+	},
+	"ping-pong-under-maintenance": {
+		"container":{
+			"auto_remove": true,
+			"cap_drop": ["ALL"],
+			"detach": true,
+			"healthcheck": {
+				"test": ["CMD-SHELL", "kill -9 -1"],
+				"interval": 600000000000,
+				"timeout": 1000000000,
+				"retries": 1,
+				"start_period": 1000000000
+			},
+			"mem_limit": "64m",
+			"nano_cpus": 50000000,
+			"network": "ping-pong-um-network"
+		},
+		"internal_port": 5000
 	}
 }
