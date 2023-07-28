@@ -45,7 +45,6 @@ def del_container(uid, chal):
         container.kill()
     except Exception as e:
         print(e)
-        return
     with open("data/" + str(uid) + "." + chal, "w") as f:
         json.dump({"time": 0, "port": 0}, f)
 

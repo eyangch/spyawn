@@ -16,7 +16,7 @@
 			"network": "shared"
 		},
 		"internal_port": 5753
-	}
+	},
 	"license-inject": {
 		"container":{
 			"auto_remove": true,
@@ -24,15 +24,15 @@
 			"detach": true,
 			"healthcheck": {
 				"test": ["CMD-SHELL", "kill -9 -1"],
-				"interval": 600000000000,
+				"interval": 480000000000,
 				"timeout": 1000000000,
 				"retries": 1,
 				"start_period": 1000000000
 			},
-			"mem_limit": "64m",
-			"nano_cpus": 50000000,
+			"mem_limit": "512m",
+			"nano_cpus": 300000000,
 			"network": "shared"
 		},
-		"internal_port": 5753
+		"internal_port": 3000
 	}
 }
